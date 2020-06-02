@@ -94,61 +94,60 @@ app.layout = html.Div(style={'backgroundColor': colors['background']}, children=
             'position': 'relative',
         }
         ),
-        
-    html.H1(
-        children='MSCI Rebalance',
-        style={
-            'textAlign': 'center',
-            'color': colors['text']
-        }), 
+    html.Div([
+        html.H1(children='MSCI Rebalance'), 
+        html.H5(children='Carry out a rebalance for any country/region/DM-EM Market/ACWI')
+        ], style={'margin-top':20,'textAlign': 'center','position': 'relative', 'color': colors['text']}),
     
-    html.H5(
-        children='Carry out a rebalance for any country/region/DM-EM Market/ACWI', 
-        style={
-            'textAlign': 'center',
-            'color': colors['text']
-        }),
-    html.Label(children = 'Date of Used data',style = {'color': colors['text']} ),
-    dcc.DatePickerSingle(
-        id='date-picker-single',
-        date= dt.date(2020,5,24)
-    ),
-
-
-    # html.Br(),
-    
-###############################################################################    
-    html.Label(children = 'Select country',style = {'color': colors['text']} ),
-    dcc.Dropdown(id = 'countries-dropdown',
-        placeholder="Type something...",
-        options=[{'label':'United','value':'US'},{'label':'Canada','value':'CA'}],
-        value='MTL'
-    ),
+    html.Hr(),
+    html.Div(
+        [html.Div(
+            [html.Label(children = 'Select country',style = {'color': colors['text']} ),
+            dcc.Dropdown(id = 'countries-dropdown',
+                placeholder="Type something...",
+                options=[{'label':'United','value':'US'},{'label':'Canada','value':'CA'}],
+                value='MTL'
+            )],className = "six columns", style={'float': 'left','position': 'relative','margin-left':20}),
+        html.Div(
+            [html.Label(children = 'Date of Used data',style = {'color': colors['text']} ),
+            dcc.DatePickerSingle(
+                id='date-picker-single',
+                date= dt.date(2020,5,24)
+            )], 
+            className = "four columns", style={'float': 'right','textAlign': 'center','position': 'relative'}),
+        ], className = "row", style = {'margin': 3}),
  ######################################################################### 
 
-    # html.Br(),
-    html.Label(children = 'Rebalance Type',style = {'color': colors['text']}),
-    dcc.RadioItems(
-        id = 'radio',
-        options=[
-            {'label': 'Semi Annual Review (May & Nov)', 'value': 'SAIR'},
-            {'label': 'Quarter Review (Feb & Aug)', 'value': 'QIR'}
-        ],
-        # labelStyle={'display': 'inline-block'},
-        value=['SAIR','QIR']
-    ),
-    html.Hr(),
-    html.Div('Click below to generate the results'),
-    html.Button('Submit', id='button',style = {'textAlign': 'center','color': colors['text']},
-    ),
+    html.Br(),
+    html.Div([
+        html.Div(
+            [html.Label(children = 'Rebalance Type',style = {'color': colors['text']}),
+            dcc.RadioItems(
+                id = 'radio',
+                options=[
+                    {'label': 'Semi Annual Review (May & Nov)', 'value': 'SAIR'},
+                    {'label': 'Quarter Review (Feb & Aug)', 'value': 'QIR'}
+                ],
+                # labelStyle={'display': 'inline-block'},
+                value=['SAIR','QIR']
+            )] ,className = "six columns", style={'float': 'left','position': 'relative','margin-left':20}),
+        
+        # html.Hr(),
+        html.Div(
+            [html.Div('Click below to generate the results',style = {'color': colors['text']}),
+            html.Button('Submit', id='button', style = {'textAlign': 'center','color': colors['text']},
+            )],className = "four columns", style={'float': 'right','textAlign': 'center','position': 'relative'})
+        ], className = "row", style = {'margin': 3}),
+
+    html.Br(),
 
     dash_table.DataTable(id='table'),
     
     # html.Div([form])
-    html.P(id = 'date_out')
+    # html.P(id = 'date_out')
 
     
-])
+], className = "ten columns offset-by-one")
 
 
 
