@@ -59,12 +59,15 @@ app.layout = html.Div( children=[
     html.Div(
         [
         html.Div(
-            [html.Label(children = 'Date of Used data',style = {'color': colors['text']} ),
-            dcc.DatePickerSingle(
+            [html.Div([html.Label(children = 'Date of Used data',style = {'color': colors['text'],'margin-left':20} ),], className="row"),
+            html.Div([dcc.DatePickerSingle(
                 id='date-picker-single',
                 date= dt.date(2020,5,24),
                 style = {'margin-left':20}
-            )], 
+            )], className="row")
+                
+                
+            ], 
             className = "col", style={'float': 'left','textAlign': 'left','position': 'relative'}),
         html.Div(
             [html.Label(children = 'Select country',style = {'color': colors['text']} ),
