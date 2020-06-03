@@ -6,6 +6,8 @@ from dash.dependencies import Input, Output
 
 import dash_table
 
+import config
+
 
 ###################
 import dash_bootstrap_components as dbc
@@ -17,75 +19,27 @@ df = pd.DataFrame(data, columns = ['Country', 'Age'])
 
 #########################
 colors = {
-    'background': '#FFFFFF',
+    # 'background': '#FFFFFF',
     'text': '#00AFE9'}
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-logo_src = "https://1000logos.net/wp-content/uploads/2016/10/Barclays-Logo.png"
+
+BS = "https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+# available_themes =  ['CERULEAN', 'COSMO', 'CYBORG', 'DARKLY', 'FLATLY', 'JOURNAL', 'LITERA', 'LUMEN', 'LUX', 'MATERIA', 'MINTY', 'PULSE', 'SANDSTONE', 'SIMPLEX', 'SKETCHY', 'SLATE', 'SOLAR', 'SPACELAB', 'SUPERHERO', 'UNITED', 'YETI']
+stylesheets = [dbc.themes.FLATLY]
+logo_src = config.logo_src
 options = {'Country': ['India','USA','China'],'Region':['Americas','Europe & Middle East','Pacific'],'DM-EM Flag': ['DM','EM'],'ACWI':['ACWI']} 
 
 
+######################
 
-############### form #################
 
-# email_input = dbc.FormGroup(
-#     [
-#         dbc.Label("Email", html_for="example-email-row", width=2),
-#         dbc.Col(
-#             dbc.Input(
-#                 type="email", id="example-email-row", placeholder="Enter email"
-#             ),
-#             width=10,
-#         ),
-#     ],
-#     row=True,
-# )
+app = dash.Dash(__name__, external_stylesheets = stylesheets)
+# app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
+# style={'backgroundColor': colors['background']},
 
-# password_input = dbc.FormGroup(
-#     [
-#         dbc.Label("Password", html_for="example-password-row", width=2),
-#         dbc.Col(
-#             dbc.Input(
-#                 type="password",
-#                 id="example-password-row",
-#                 placeholder="Enter password",
-#             ),
-#             width=10,
-#         ),
-#     ],
-#     row=True,
-# )
+app.layout = html.Div( children=[
 
-# radios_input = dbc.FormGroup(
-#     [
-#         dbc.Label("Radios", html_for="example-radios-row", width=2),
-#         dbc.Col(
-#             dbc.RadioItems(
-#                 id="example-radios-row",
-#                 options=[
-#                     {"label": "First radio", "value": 1},
-#                     {"label": "Second radio", "value": 2},
-#                     {
-#                         "label": "Third disabled radio",
-#                         "value": 3,
-#                         "disabled": True,
-#                     },
-#                 ],
-#             ),
-#             width=10,
-#         ),
-#     ],
-#     row=True,
-# )
-
-# form = dbc.Form([email_input, password_input, radios_input])
-
-############################################
-
-app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
-
-app.layout = html.Div(style={'backgroundColor': colors['background']}, children=[
-
-    html.Img(
+    html.Div([
+        html.Img(
         src = logo_src,
         style={
             'height': '10%',
@@ -93,30 +47,35 @@ app.layout = html.Div(style={'backgroundColor': colors['background']}, children=
             'float': 'right',
             'position': 'relative',
         }
-        ),
+        ), 
+
+        ]),
     html.Div([
         html.H1(children='MSCI Rebalance'), 
         html.H5(children='Carry out a rebalance for any country/region/DM-EM Market/ACWI')
-        ], style={'margin-top':20,'textAlign': 'center','position': 'relative', 'color': colors['text']}),
+        ], style={'margin-top':20,'textAlign': 'center','position': 'relative', 'color': colors['text']},className="m-5"),
     
     html.Hr(),
     html.Div(
-        [html.Div(
+        [
+        html.Div(
+            [html.Label(children = 'Date of Used data',style = {'color': colors['text']} ),
+            dcc.DatePickerSingle(
+                id='date-picker-single',
+                date= dt.date(2020,5,24),
+                style = {'margin-left':20}
+            )], 
+            className = "col", style={'float': 'left','textAlign': 'left','position': 'relative'}),
+        html.Div(
             [html.Label(children = 'Select country',style = {'color': colors['text']} ),
             dcc.Dropdown(id = 'countries-dropdown',
                 placeholder="Type something...",
                 options=[{'label':'United','value':'US'},{'label':'Canada','value':'CA'}],
                 value='MTL'
-            )],className = "six columns", style={'float': 'left','position': 'relative','margin-left':20}),
-        html.Div(
-            [html.Label(children = 'Date of Used data',style = {'color': colors['text']} ),
-            dcc.DatePickerSingle(
-                id='date-picker-single',
-                date= dt.date(2020,5,24)
-            )], 
-            className = "four columns", style={'float': 'right','textAlign': 'center','position': 'relative'}),
-        ], className = "row", style = {'margin': 3}),
- ######################################################################### 
+            )],className = "col-8", style={'float': 'right','position': 'relative','margin-left':20})
+        ], className = "row", style = {'margin-top': 1}),
+
+    ######################################################################### 
 
     html.Br(),
     html.Div([
@@ -128,26 +87,39 @@ app.layout = html.Div(style={'backgroundColor': colors['background']}, children=
                     {'label': 'Semi Annual Review (May & Nov)', 'value': 'SAIR'},
                     {'label': 'Quarter Review (Feb & Aug)', 'value': 'QIR'}
                 ],
-                # labelStyle={'display': 'inline-block'},
+                labelStyle={'display': 'inline-block', 'margin-right':50},
                 value=['SAIR','QIR']
-            )] ,className = "six columns", style={'float': 'left','position': 'relative','margin-left':20}),
+            )] , style={'float': 'left','position': 'relative','margin-left':20}),
         
+        ], className = "row", style = {'margin-bottom': 1}),
+        
+
+
+    #########################################
+    html.Hr(),
+    html.Div([
+       
         # html.Hr(),
         html.Div(
             [html.Div('Click below to generate the results',style = {'color': colors['text']}),
-            html.Button('Submit', id='button', style = {'textAlign': 'center','color': colors['text']},
-            )],className = "four columns", style={'float': 'right','textAlign': 'center','position': 'relative'})
-        ], className = "row", style = {'margin': 3}),
+            html.Button('Submit', id='button', style = {'textAlign': 'center','color': colors['text'],'margin-top':15},
+            )], style={'textAlign': 'center','position': 'relative'})
+        ], className = "row justify-content-center" , style={'float': 'center','position': 'relative', 'color': colors['text']}),
 
     html.Br(),
-
-    dash_table.DataTable(id='table'),
+    html.Div([
+        html.Div([
+            dash_table.DataTable(id='table'),
+        ], className="col-6")
+        
+        ],className = "row justify-content-center" , style={'position': 'relative'}),
+    
     
     # html.Div([form])
     # html.P(id = 'date_out')
 
     
-], className = "ten columns offset-by-one")
+], className = "m-5")
 
 
 
